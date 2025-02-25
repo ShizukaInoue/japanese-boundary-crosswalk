@@ -83,46 +83,52 @@ Notes on output:
 
 ## Weight Calculation
 
-The crosswalk is constructed through a spatial intersection of two administrative boundary maps: a reference year (2000) and a target year. This process creates subunits that:
-1. Cover the entire territory
-2. Are pairwise disjoint
-3. Can be combined to form any spatial unit in either original map
+The crosswalk standardizes all city-level data to 1980 city definitions. Following Eckert et al. (2020), we:
+1. Intersect historical city boundaries with 1980 boundaries
+2. Create subunits based on these intersections
+3. Reallocate variables proportionally based on area overlap
 
 ### Methodology
 
-For stock variables (e.g., population counts), weights are calculated as:
+For a given historical year, weights are calculated as:
 
 $$
-w_{ij} = \frac{A_{ij}}{\sum_{j \in \mathcal{J}} A_{ij}} \quad \forall i \in \mathcal{I}, j \in \mathcal{J}
+w_{ij} = \frac{A_{ij}}{A_j^{hist}} \quad \forall i \in \mathcal{I}, j \in \mathcal{J}
 $$
 
 where:
-- $w_{ij}$ is the weight between unit $i$ in 2000 and unit $j$ in target year
-- $A_{ij}$ is the intersection area between units $i$ and $j$
-- $\mathcal{I}$ is the set of units in 2000 (reference map)
-- $\mathcal{J}$ is the set of units in target year (reporting map)
+- $w_{ij}$ is the weight between city $i$ in 1980 and city $j$ in historical year
+- $A_{ij}$ is the intersection area between cities $i$ and $j$
+- $A_j^{hist}$ is the total area of historical city $j$
+- $\mathcal{I}$ is the set of 1980 cities (reference)
+- $\mathcal{J}$ is the set of historical cities
 
 ### Usage Example
 
-For a variable $X$ (e.g., population) reported in the target year, its value in 2000 boundaries can be computed as:
+For a historical variable $X$ (e.g., casualties), its value in 1980 boundaries is:
 
 $$
-X_i^{2000} = \sum_{j \in \mathcal{J}} w_{ij} X_j^{target}
+X_i^{1980} = \sum_{j \in \mathcal{J}} w_{ij} X_j^{hist}
 $$
+
+For example, if a 1980 city overlaps with two historical cities:
+- 20% overlap with historical city A (value: 10)
+- 100% overlap with historical city B (value: 1)
+Then: $X_i^{1980} = (10 \times 0.2) + (1 \times 1.0) = 3$
 
 ### Key Properties
 
-1. **Coverage**: $\sum_{j \in \mathcal{J}} A_{ij} = A_i$ for all $i \in \mathcal{I}$
+1. **Coverage**: $\sum_{i \in \mathcal{I}} A_{ij} = A_j^{hist}$ for all historical cities $j$
 2. **Non-negativity**: $w_{ij} \geq 0$
-3. **Unity**: $\sum_{j \in \mathcal{J}} w_{ij} = 1$ for all $i \in \mathcal{I}$
-4. **Threshold**: $w_{ij} = 0$ if $\frac{A_{ij}}{A_i} < 10^{-4}$
+3. **Unity**: $\sum_{i \in \mathcal{I}} w_{ij} = 1$ for all historical cities $j$
+4. **Threshold**: $w_{ij} = 0$ if $\frac{A_{ij}}{A_j^{hist}} < 10^{-4}$
 
 ### Important Notes
 
-1. The method assumes variables are distributed proportionally to area size within administrative units
-2. Best suited for stock variables (e.g., population, total payroll)
-3. For average outcomes (e.g., average wages), different weights should be computed using reference map areas
-4. More disaggregated maps generally provide better accuracy
+1. Variables are reallocated proportionally to area overlap
+2. Best suited for stock variables (e.g., population, casualties)
+3. Weights represent the fraction of historical city area that overlaps with 1980 cities
+4. More disaggregated historical data provides better accuracy
 
 ## References
 
