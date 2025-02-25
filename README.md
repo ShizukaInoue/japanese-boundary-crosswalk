@@ -1,6 +1,6 @@
 # Japanese Administrative Boundary Crosswalk Creator
 
-Creates geographic crosswalks between different years of Japanese administrative boundaries (1980-2000), using 2000 boundaries as the reference unit.
+Creates a template for geographic crosswalks between different years of Japanese administrative boundaries.
 
 ## Overview
 
