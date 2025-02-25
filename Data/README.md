@@ -17,7 +17,7 @@ Data/
 The shapefiles can be obtained from:
 1. MLIT National Land Numerical Information download service (国土数値情報ダウンロードサービス)
    - URL: https://nlftp.mlit.go.jp/ksj/
-   - Navigate to: 政策区域 > 行政区域
+   - Navigate to: 行政区域
    - Download the relevant years (1980, 2000)
 
 2. Required processing:
