@@ -1,3 +1,13 @@
+# Data files
+Data/*
+!Data/.gitkeep
+!Data/README.md
+
+# Results
+Crosswalk/*
+!Crosswalk/.gitkeep
+!Crosswalk/README.md
+
 # Python
 __pycache__/
 *.py[cod]
@@ -26,18 +36,12 @@ wheels/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Data and outputs (but keep directories)
-Data/*
-!Data/.gitkeep
-Crosswalk/*
-!Crosswalk/.gitkeep
-
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db 
