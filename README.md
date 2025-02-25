@@ -113,7 +113,7 @@ $$
 
 For example, consider a 2000 city i that overlaps with two 1980 cities:
 
-| 1980 City | Population | Area Overlap with 2000 City i |
+| 1980 City $\mathcal{J}$ | Population (X_j)| Area Overlap with 2000 City i ($w_{ij}$)|
 |-----------|------------|------------------------------|
 | City A    | 100       | 20% of City A's area        |
 | City B    | 10        | 100% of City B's area       |
