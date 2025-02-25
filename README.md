@@ -83,8 +83,8 @@ Notes on output:
 
 ## Weight Calculation
 
-The crosswalk standardizes all city-level data to 1980 city definitions. Following Eckert et al. (2020), we:
-1. Intersect historical city boundaries with 1980 boundaries
+The crosswalk standardizes all city-level data to 2000 city definitions. Following Eckert et al. (2020), we:
+1. Intersect historical city boundaries with 2000 boundaries
 2. Create subunits based on these intersections
 3. Reallocate variables proportionally based on area overlap
 
@@ -97,7 +97,7 @@ w_{ij} = \frac{A_{ij}}{A_j^{hist}} \quad \forall i \in \mathcal{I}, j \in \mathc
 $$
 
 where:
-- $w_{ij}$ is the weight between city $i$ in 1980 and city $j$ in historical year
+- $w_{ij}$ is the weight between city $i$ in 2000 and city $j$ in the reference year
 - $A_{ij}$ is the intersection area between cities $i$ and $j$
 - $A_j^{hist}$ is the total area of historical city $j$
 - $\mathcal{I}$ is the set of 1980 cities (reference)
@@ -105,23 +105,23 @@ where:
 
 ### Usage Example
 
-For a historical variable $X$ (e.g., casualties), its value in 1980 boundaries is:
+For a historical (1980) variable $X$ (e.g., population), its value in 2000 boundaries is:
 
 $$
-X_i^{1980} = \sum_{j \in \mathcal{J}} w_{ij} X_j^{hist}
+X_i^{2000} = \sum_{j \in \mathcal{J}} w_{ij} X_j^{1980}
 $$
 
-For example, if a 1980 city overlaps with two historical cities:
-- 20% overlap with historical city A (value: 10)
-- 100% overlap with historical city B (value: 1)
-Then: $X_i^{1980} = (10 \times 0.2) + (1 \times 1.0) = 3$
+For example, consider a 2000 city i that overlaps with two 1980 cities:
 
-### Key Properties
+| 1980 City | Population | Area Overlap with 2000 City i |
+|-----------|------------|------------------------------|
+| City A    | 100       | 20% of City A's area        |
+| City B    | 10        | 100% of City B's area       |
 
-1. **Coverage**: $\sum_{i \in \mathcal{I}} A_{ij} = A_j^{hist}$ for all historical cities $j$
-2. **Non-negativity**: $w_{ij} \geq 0$
-3. **Unity**: $\sum_{i \in \mathcal{I}} w_{ij} = 1$ for all historical cities $j$
-4. **Threshold**: $w_{ij} = 0$ if $\frac{A_{ij}}{A_j^{hist}} < 10^{-4}$
+The 1980 population for 2000 city i would be:
+$$X_i^{2000} = (100 \times 0.2) + (10 \times 1.0) = 30$$
+
+This means that based on area-weighted reallocation, 30 people from 1980 would be assigned to the 2000 boundaries of city i.
 
 ### Important Notes
 
@@ -132,5 +132,4 @@ Then: $X_i^{1980} = (10 \times 0.2) + (1 \times 1.0) = 3$
 
 ## References
 
-Eckert et al. (2020) "A Method to Construct Geographical Crosswalks with an Application to US Counties since 1790" 
-https://fpeckert.me/eglp/
+Eckert, F., Gvirtz, A., Liang, J., & Peters, M. (2020). "A Method to Construct Geographical Crosswalks with an Application to US Counties since 1790." [Working Paper](https://fpeckert.me/eglp/).
