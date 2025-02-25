@@ -83,33 +83,46 @@ Notes on output:
 
 ## Weight Calculation
 
-The crosswalk weights are calculated using the following methodology:
+The crosswalk is constructed through a spatial intersection of two administrative boundary maps: a reference year (2000) and a target year. This process creates subunits that:
+1. Cover the entire territory
+2. Are pairwise disjoint
+3. Can be combined to form any spatial unit in either original map
 
-Let $\mathcal{I}$ be the set of administrative units in 2000 and $\mathcal{J}$ be the set of units in the target year. The weight between units is:
+### Methodology
+
+For stock variables (e.g., population counts), weights are calculated as:
 
 $$
-w_{ij} = \frac{A_{ij}}{\sum_{j \in \mathcal{J}} A_{ij}}
+w_{ij} = \frac{A_{ij}}{\sum_{j \in \mathcal{J}} A_{ij}} \quad \forall i \in \mathcal{I}, j \in \mathcal{J}
 $$
 
 where:
 - $w_{ij}$ is the weight between unit $i$ in 2000 and unit $j$ in target year
 - $A_{ij}$ is the intersection area between units $i$ and $j$
+- $\mathcal{I}$ is the set of units in 2000 (reference map)
+- $\mathcal{J}$ is the set of units in target year (reporting map)
 
-The intersection area is calculated as:
+### Usage Example
+
+For a variable $X$ (e.g., population) reported in the target year, its value in 2000 boundaries can be computed as:
 
 $$
-A_{ij} = \text{Area}(G_i \cap G_j)
+X_i^{2000} = \sum_{j \in \mathcal{J}} w_{ij} X_j^{target}
 $$
 
-where:
-- $G_i$ is the geometry of unit $i$ in 2000
-- $G_j$ is the geometry of unit $j$ in target year
-- $\cap$ denotes geometric intersection
+### Key Properties
 
-Properties of weights:
-1. Non-negativity: $w_{ij} \geq 0$
-2. Sum to unity: $\sum_{j} w_{ij} = 1$
-3. Threshold filter: $w_{ij} = 0$ if $\frac{A_{ij}}{A_i} < 10^{-4}$
+1. **Coverage**: $\sum_{j \in \mathcal{J}} A_{ij} = A_i$ for all $i \in \mathcal{I}$
+2. **Non-negativity**: $w_{ij} \geq 0$
+3. **Unity**: $\sum_{j \in \mathcal{J}} w_{ij} = 1$ for all $i \in \mathcal{I}$
+4. **Threshold**: $w_{ij} = 0$ if $\frac{A_{ij}}{A_i} < 10^{-4}$
+
+### Important Notes
+
+1. The method assumes variables are distributed proportionally to area size within administrative units
+2. Best suited for stock variables (e.g., population, total payroll)
+3. For average outcomes (e.g., average wages), different weights should be computed using reference map areas
+4. More disaggregated maps generally provide better accuracy
 
 ## References
 
