@@ -41,45 +41,62 @@ Required columns in shapefiles:
 
 ## Usage
 
-1. Place shapefiles in the `Data` directory
-2. Run the notebook:
-```python
-# Basic usage
-import geopandas as gpd
-from pathlib import Path
+This package provides tools to create crosswalks between different years of Japanese administrative boundaries. There are two ways to use this tool:
 
-# Set up paths
-base_dir = Path('Data')
-export_dir = Path('Crosswalk')
+### Option 1: Using the direct runner script (Recommended)
 
-# Process single year
-year = 1980
+The simplest way to run the crosswalk creator is to use the `direct_run.py` script, which is self-contained and doesn't require package installation:
+
+```bash
+python direct_run.py --source-year 2000 --target-year 1980
 ```
 
-## Output
+### Option 2: Using the package
 
-Creates Excel files with crosswalk information:
+You can also install the package and use it as a Python module:
+
+```bash
+# Install the package in development mode
+pip install -e .
+
+# Run the main script
+python main.py --source-year 2000 --target-year 1980
 ```
-Crosswalk/
-└── Crosswalk_2000_1980.xlsx
-```
 
-Sample output format:
+### Command-line Arguments
 
-| CITY2000 | CITY1980 | PREF2000 | PREF1980 | GUN2000 | GUN1980 | City Code 2000 | City Code 1980 | weight |
-|----------|----------|-----------|-----------|---------|---------|----------------|----------------|---------|
-| 札幌市 | 札幌市 | 北海道 | 北海道 | - | - | 01100 | 01100 | 1.000 |
-| 函館市 | 函館市 | 北海道 | 北海道 | - | - | 01202 | 01202 | 0.982 |
-| 江別市 | 江別町 | 北海道 | 北海道 | - | 石狩郡 | 01217 | 01303 | 0.995 |
-| 八雲町 | 八雲町 | 北海道 | 北海道 | 二海郡 | 山越郡 | 01345 | 01371 | 0.873 |
-| 余市町 | 余市町 | 北海道 | 北海道 | 余市郡 | 余市郡 | 01423 | 01423 | 1.000 |
+Both scripts accept the following arguments:
 
-Notes on output:
-- CITY2000/CITY1980: City names in respective years
-- PREF2000/PREF1980: Prefecture names
-- GUN2000/GUN1980: District names (if applicable)
-- City Code: 5-digit administrative codes (first 2 digits: prefecture code)
-- weight: Area-based weight for crosswalking (sum to 1 for each 2000 unit)
+- `--source-year`: Year of source boundaries (default: 2000)
+- `--target-year`: Year of target boundaries (default: 1980)
+- `--source-path`: Path to source shapefile (optional)
+- `--target-path`: Path to target shapefile (optional)
+- `--output-path`: Path to save crosswalk (optional)
+- `--weight-threshold`: Minimum weight to include in crosswalk (default: 0.001)
+
+### Data Requirements
+
+The tool expects shapefiles in the following locations:
+- `Data/jpn{source_year}/jpn{source_year}geo.shp`
+- `Data/jpn{target_year}/jpn{target_year}geo.shp`
+
+The shapefiles must contain the following columns:
+- `PREF`: Prefecture name
+- `CITY`: City name
+- `GUN`: District name (optional)
+- `N03_007`: City code (optional)
+
+### Output
+
+The crosswalk is saved as an Excel file at:
+- `Crosswalk/Crosswalk_{source_year}_{target_year}.xlsx`
+
+The Excel file contains the following columns:
+- `PREF{source_year}/PREF{target_year}`: Prefecture names
+- `CITY{source_year}/CITY{target_year}`: City names
+- `GUN{source_year}/GUN{target_year}`: District names
+- `City Code {source_year}/{target_year}`: 5-digit administrative codes
+- `weight`: Area-based weight for crosswalking
 
 ## Weight Calculation
 
